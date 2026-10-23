@@ -1,5 +1,5 @@
 Idea Board — Proprietary License
-Copyright (c) 27 July 2026 Draco Vallowish. All rights reserved.
+Copyright (c) 23 October 2026 Harshraj00001. All rights reserved.
 
 This repository is made publicly viewable for demonstration and
 portfolio purposes only. It is NOT open source.
