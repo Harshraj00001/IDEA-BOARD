@@ -1,0 +1,32 @@
+Idea Board — Proprietary License
+Copyright (c) 27 July 2026 Draco Vallowish. All rights reserved.
+
+This repository is made publicly viewable for demonstration and
+portfolio purposes only. It is NOT open source.
+
+Permission is NOT granted to any person to copy, modify, merge,
+publish, distribute, sublicense, host as a competing service, or
+sell copies of this software or its source code, in whole or in
+part, without the prior written permission of the copyright holder.
+
+You MAY:
+  - View the source code.
+  - Fork it privately for your own personal, non-distributed use.
+  - Run it locally for your own personal use.
+
+You MAY NOT, without written permission:
+  - Redistribute this code, modified or unmodified.
+  - Deploy a public copy of this project (as-is or modified) under
+    a different name or as a competing product/service.
+  - Sell or sublicense this code or any derivative of it.
+  - Remove or alter this notice from copies of the software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE
+SOFTWARE.
+
+For permissions or licensing inquiries, contact the copyright holder
+directly.

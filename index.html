@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Idea Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="idea-board.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Idea board</h1>
+    <span class="sub">a blueprint for things you haven't finished thinking yet</span>
+    <div class="spacer"></div>
+    <button id="toggleTree">Toggle list</button>
+    <button id="linkModeBtn">Link boxes</button>
+    <button id="exportBtn">Save to file</button>
+    <button id="importBtn">Load from file</button>
+    <input type="file" id="importInput" accept="application/json" style="display:none;">
+    <button id="themeBtn">Theme</button>
+    <button id="musicBtn">Music</button>
+    <button id="howToBtn">How to use</button>
+    <button class="primary" id="newRootBtn">+ New idea collection</button>
+  </header>
+  <div id="linkHint" style="display:none;">Link mode: click one box, then click another to connect them. Click "Link boxes" again to stop.</div>
+  <main>
+    <div id="treePanel">
+      <div class="tree-title">All ideas</div>
+      <div id="treeList"></div>
+    </div>
+    <div id="canvasWrap">
+      <div id="canvas">
+        <svg id="wires" width="2600" height="1800"></svg>
+      </div>
+    </div>
+    <div id="detailPanel" class="empty">Click a box to see and edit its details here.</div>
+  </main>
+</div>
+<div id="nodeTooltip">
+  <div class="tt-title"></div>
+  <div class="tt-body"></div>
+</div>
+
+<div id="howToOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>How to use the Idea Board</h2>
+      <button id="howToClose" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <h3>Starting a collection</h3>
+      <p>Click <strong>"+ New idea collection"</strong> to create a parent box (red). Once it exists, it shows a <strong>"+ idea"</strong> button and a <strong>"delete"</strong> button.</p>
+
+      <h3>Adding ideas</h3>
+      <p>Click <strong>"+ idea"</strong> on any box to create a connected child box (white/green). Child boxes can also have their own <strong>"+ idea"</strong> children, so you can branch as deep as you like.</p>
+
+      <h3>Viewing and editing a box</h3>
+      <p>Click any box (when link mode is off) to open its details on the right: <strong>Title</strong>, an optional <strong>Thumbnail image URL</strong>, a <strong>Summary</strong>, and a <strong>Link</strong> field for pointing to a full page, file, or site. Edits save automatically.</p>
+
+      <h3>Previewing without clicking</h3>
+      <p>Hover your mouse over any box to see a tooltip with its title and full summary — handy for a quick peek without opening the side panel.</p>
+
+      <h3>Linking two existing boxes</h3>
+      <p>Click <strong>"Link boxes"</strong> to turn on link mode. Click one box, then click the box you want to connect it to — a new wire draws between them. Click <strong>"Link boxes"</strong> again to turn link mode off.</p>
+
+      <h3>Unlinking boxes</h3>
+      <p>Make sure link mode is off. Click on the linked box — under its title in the right-side panel, you'll see a <strong>"Linked from"</strong> row listing every box it's connected to as a small tag. Click the <strong>&times;</strong> on a tag to remove that one connection.</p>
+
+      <h3>Finding a box in a big board</h3>
+      <p>Click <strong>"Toggle list"</strong> to open a left-hand list of every box on the board. Click any entry to jump straight to it on the canvas.</p>
+
+      <h3>Saving your work</h3>
+      <p>The board auto-saves in your browser as you go. Click <strong>"Save to file"</strong> anytime to download a backup copy as a file. Click <strong>"Load from file"</strong> to bring a saved file back in (this replaces what's currently on the board).</p>
+
+      <h3>Deleting a box</h3>
+      <p>Click <strong>"delete"</strong> on a box. If any of its linked boxes would be left with no other connection, you'll be asked to confirm — those get removed too. A box that still has another link stays put, just missing that one connection.</p>
+
+      <h3>Changing the look</h3>
+      <p>Click <strong>"Theme"</strong> to pick a preset background (Nature, Space, Underwater, Medieval, Dungeons & Dragons) or upload your own custom background image.</p>
+
+      <h3>Background music</h3>
+      <p>Click <strong>"Music"</strong> to either upload an audio file to play while you work, or paste a YouTube link to play that in the background instead.</p>
+
+    </div>
+  </div>
+</div>
+
+<div id="themeOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Choose a theme</h2>
+      <button id="themeClose" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="theme-grid" id="themeGrid">
+        <button class="theme-swatch" data-theme="blueprint"><div class="swatch-bar sw-blueprint"></div><div class="swatch-label">Blueprint</div></button>
+        <button class="theme-swatch" data-theme="nature"><div class="swatch-bar sw-nature"></div><div class="swatch-label">Nature</div></button>
+        <button class="theme-swatch" data-theme="space"><div class="swatch-bar sw-space"></div><div class="swatch-label">Space</div></button>
+        <button class="theme-swatch" data-theme="underwater"><div class="swatch-bar sw-underwater"></div><div class="swatch-label">Underwater</div></button>
+        <button class="theme-swatch" data-theme="medieval"><div class="swatch-bar sw-medieval"></div><div class="swatch-label">Medieval</div></button>
+        <button class="theme-swatch" data-theme="dnd"><div class="swatch-bar sw-dnd"></div><div class="swatch-label">Dungeons & Dragons</div></button>
+      </div>
+      <div class="custom-bg-row">
+        <div class="mp-label" style="margin-bottom:6px;">Custom background image</div>
+        <button id="customBgBtn">Upload image</button>
+        <button id="customBgClear">Remove custom background</button>
+        <input type="file" id="customBgInput" accept="image/*" style="display:none;">
+        <div class="hint">Works best with a landscape photo around 1920×1080 (16:9) or similar — it'll scale to fill your screen and crop the edges slightly if the shape doesn't match exactly. Keep the file a couple MB or less so your browser can save it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="musicPanel">
+  <div class="mp-header">
+    <span>Background music</span>
+    <button id="musicClose" class="modal-close">&times;</button>
+  </div>
+  <div class="mp-body">
+    <div class="mp-section">
+      <div class="mp-label">Upload an audio file</div>
+      <button id="audioUploadBtn">Choose file</button>
+      <input type="file" id="audioUploadInput" accept="audio/*" style="display:none;">
+      <audio id="audioPlayer" controls style="display:none;"></audio>
+      <div class="mp-note">Not saved between visits — pick the file again next time you open the board.</div>
+    </div>
+    <div class="mp-section">
+      <div class="mp-label">Or play a YouTube link</div>
+      <div class="mp-row">
+        <input type="text" id="ytUrlInput" placeholder="Paste a YouTube link">
+        <button id="ytLoadBtn">Load</button>
+      </div>
+      <div id="ytPlayerWrap"></div>
+      <div class="mp-row" id="ytControls" style="display:none;margin-top:8px;">
+        <button id="ytPlayBtn">Play</button>
+        <button id="ytPauseBtn">Pause</button>
+      </div>
+      <div class="mp-note">Browsers block autoplay with sound, so you'll need to press Play once yourself.</div>
+    </div>
+  </div>
+</div>
+
+<script src="idea-board.js"></script>
+
+</body>
+</html>
